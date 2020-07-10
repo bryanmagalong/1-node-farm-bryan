@@ -7,4 +7,9 @@ const fs = require('fs');
 const textIn = fs.readFileSync('./txt/input.txt', 'utf-8');
 
 const textOut = `This is what we know about the avocado: ${textIn}\nCreated on ${Date.now()}`;
-console.log(textOut);
+
+// Write a file
+// First param: File path
+// 2nd param, string to write
+fs.writeFileSync('./txt/output.txt', textOut);
+console.log('File written !');
