@@ -1,5 +1,6 @@
 const fs = require('fs');
 const http = require('http');
+const url = require('url');
 
 //========= FILE
 //== Read/Write datas in synchronous way
@@ -52,6 +53,28 @@ const http = require('http');
  * In this callback, we have access to the Request and Response object
  */
 const server = http.createServer((req, res) => {
+  //== ROUTING
+  const pathName = req.url;
+
+  // if the url is the root or overview
+  if(pathName === '/' || pathName === '/overview') {
+    res.end('This is the OVERVIEW');
+  } else if (pathName === '/product') {
+    // if the url is product
+    res.end('This is the PRODUCT');
+  }
+  else {
+    // error 404
+
+    // send an http header
+    // we specify that the content that we're sending is html
+    res.writeHead(404, {
+      'Content-type': 'text/html'
+    });
+    res.end('<h1>PAGE NOT FOUND</h1>');
+  }
+  //===========
+  
   res.end('Hello World from the server !');
 });
 
