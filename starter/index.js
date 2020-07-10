@@ -23,9 +23,11 @@ const fs = require('fs');
  * 3rd param: callback
  * the file will be read in the background without blocking the thread
 */
-
 //! Callback hell
 fs.readFile('./txt/start.txt', 'utf-8', (err, data1) => {
+  // error handling
+  if(err) return console.log('ERROR!');
+  
   fs.readFile(`./txt/${data1}.txt`, 'utf-8', (err, data2) => {
     // this console.log will show the data once the file is fully read
     console.log(data2);
