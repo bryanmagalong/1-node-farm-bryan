@@ -53,6 +53,27 @@ const url = require('url');
  * In this callback, we have access to the Request and Response object
 */
 
+/**
+ * Function that replace placeholders with values from product in parameters
+ * @param {*} temp 
+ * @param {*} product 
+ */
+const replaceTemplate = (temp, product) => {
+  let output = temp.replace(/{%PRODUCT_NAME%}/g, product.productName);
+  output = output.replace(/{%IMAGE%}/g, product.image);
+  console.log('temp: ', output);
+  output = output.replace(/{%PRICE%}/g, product.price);
+  output = output.replace(/{%FROM%}/g, product.from);
+  output = output.replace(/{%NUTRIENTS_NAME%}/g, product.nutrients);
+  output = output.replace(/{%QUANTITY%}/g, product.quantity);
+  output = output.replace(/{%DESCRIPTION%}/g, product.description);
+  output = output.replace(/{%ID%}/g, product.id);
+
+  if(!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
+
+  return output;
+};
+
 // We read the data once, only in the beginning
 // and each time we hit the api route, we send it back
 // __dirname -> where the current file is located
@@ -71,9 +92,16 @@ const server = http.createServer((req, res) => {
 
   // if the url is the root or overview
   if(pathName === '/' || pathName === '/overview') {
-
     res.writeHead(200, { 'Content-type': 'text/html' });
-    res.end(templateOverview);
+    
+    // Replace all placceholders for each card in dataObj
+    // and join all the elements of the new array in a string
+    const cardsHtml = dataObj.map((elem) => replaceTemplate(templateCard, elem)).join('');
+
+    // Replace the PRODUCT_CARDS placeholder with our html
+    const output = templateOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+
+    res.end(output);
   } else if (pathName === '/product') {
     // if the url is product
 
