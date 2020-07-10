@@ -55,6 +55,13 @@ const url = require('url');
 
 // We read the data once, only in the beginning
 // and each time we hit the api route, we send it back
+// __dirname -> where the current file is located
+
+//== html templates
+const templateOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const templateCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const templateProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
@@ -64,12 +71,17 @@ const server = http.createServer((req, res) => {
 
   // if the url is the root or overview
   if(pathName === '/' || pathName === '/overview') {
-    res.end('This is the OVERVIEW');
+
+    res.writeHead(200, { 'Content-type': 'text/html' });
+    res.end(templateOverview);
   } else if (pathName === '/product') {
     // if the url is product
+
+
     res.end('This is the PRODUCT');
   } else if (pathName === '/api') {
-    // __dirname -> where the current file is located
+
+
     res.writeHead(200, { 'Content-type': 'application/json' });
     res.end(data);
   }
