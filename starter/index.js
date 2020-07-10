@@ -51,7 +51,13 @@ const url = require('url');
 /**
  * Each time we hit the server, the callback function will be called
  * In this callback, we have access to the Request and Response object
- */
+*/
+
+// We read the data once, only in the beginning
+// and each time we hit the api route, we send it back
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+
 const server = http.createServer((req, res) => {
   //== ROUTING
   const pathName = req.url;
@@ -64,13 +70,8 @@ const server = http.createServer((req, res) => {
     res.end('This is the PRODUCT');
   } else if (pathName === '/api') {
     // __dirname -> where the current file is located
-    fs.readFile(`${__dirname}/dev-data/data.json`, 'utf-8', (err, data) => {
-      // JSON.parse, parse json to js
-      const productData = JSON.parse(data);
-      // console.log(productData);
-      res.writeHead(200, { 'Content-type': 'application/json' })
-      res.end(data);
-    });
+    res.writeHead(200, { 'Content-type': 'application/json' });
+    res.end(data);
   }
   else {
     // error 404
