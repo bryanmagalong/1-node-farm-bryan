@@ -106,12 +106,13 @@ const server = http.createServer((req, res) => {
     res.end(output);
   } else if (pathname === '/product') {
     // if the url is product
+    res.writeHead(200, { 'Content-type': 'text/html' });
     console.log(query);
     // Get the product from database by the url parameter id
-    const product = dataObj[query.id];
+    const product = dataObj.find((item) => item.id == query.id);
     console.log(product);
-    
-    res.end('This is the PRODUCT');
+    const output = replaceTemplate(templateProduct, product);
+    res.end(output);
   } else if (pathname === '/api') {
 
 
