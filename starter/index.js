@@ -88,10 +88,12 @@ const dataObj = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
   //== ROUTING
-  const pathName = req.url;
+  // get query and pathname variables from Url object by destructuring
+  // query contains the url parameters such as id
+  const { query, pathname } = url.parse(req.url, true);
 
   // if the url is the root or overview
-  if(pathName === '/' || pathName === '/overview') {
+  if(pathname === '/' || pathname === '/overview') {
     res.writeHead(200, { 'Content-type': 'text/html' });
     
     // Replace all placceholders for each card in dataObj
@@ -102,12 +104,15 @@ const server = http.createServer((req, res) => {
     const output = templateOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
 
     res.end(output);
-  } else if (pathName === '/product') {
+  } else if (pathname === '/product') {
     // if the url is product
-
-
+    console.log(query);
+    // Get the product from database by the url parameter id
+    const product = dataObj[query.id];
+    console.log(product);
+    
     res.end('This is the PRODUCT');
-  } else if (pathName === '/api') {
+  } else if (pathname === '/api') {
 
 
     res.writeHead(200, { 'Content-type': 'application/json' });
