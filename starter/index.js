@@ -2,6 +2,8 @@ const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
+const replaceTemplate = require('./modules/replaceTemplate');
+
 //========= FILE
 //== Read/Write datas in synchronous way
 /*
@@ -52,27 +54,6 @@ const url = require('url');
  * Each time we hit the server, the callback function will be called
  * In this callback, we have access to the Request and Response object
 */
-
-/**
- * Function that replace placeholders with values from product in parameters
- * @param {*} temp 
- * @param {*} product 
- */
-const replaceTemplate = (temp, product) => {
-  let output = temp.replace(/{%PRODUCT_NAME%}/g, product.productName);
-  output = output.replace(/{%IMAGE%}/g, product.image);
-  console.log('temp: ', output);
-  output = output.replace(/{%PRICE%}/g, product.price);
-  output = output.replace(/{%FROM%}/g, product.from);
-  output = output.replace(/{%NUTRIENTS_NAME%}/g, product.nutrients);
-  output = output.replace(/{%QUANTITY%}/g, product.quantity);
-  output = output.replace(/{%DESCRIPTION%}/g, product.description);
-  output = output.replace(/{%ID%}/g, product.id);
-
-  if(!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
-
-  return output;
-};
 
 // We read the data once, only in the beginning
 // and each time we hit the api route, we send it back
