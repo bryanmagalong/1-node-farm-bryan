@@ -2,6 +2,8 @@ const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
+const slugify = require('slugify');
+
 const replaceTemplate = require('./modules/replaceTemplate');
 
 //========= FILE
@@ -67,6 +69,10 @@ const templateProduct = fs.readFileSync(`${__dirname}/templates/template-product
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
+// Array of slugs
+const slugs = dataObj.map((elem) => slugify(elem.productName, { lower: true }));
+console.log('//======== SLUGS ARRAY: ', slugs);
+
 const server = http.createServer((req, res) => {
   //== ROUTING
   // get query and pathname variables from Url object by destructuring
@@ -88,10 +94,8 @@ const server = http.createServer((req, res) => {
   } else if (pathname === '/product') {
     // if the url is product
     res.writeHead(200, { 'Content-type': 'text/html' });
-    console.log(query);
     // Get the product from database by the url parameter id
     const product = dataObj.find((item) => item.id == query.id);
-    console.log(product);
     const output = replaceTemplate(templateProduct, product);
     res.end(output);
   } else if (pathname === '/api') {
